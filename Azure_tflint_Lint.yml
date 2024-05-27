@@ -1,1 +1,19 @@
+parameters:
+- name: 'workingDirectory'
+  type: string    
+  default: '$(System.DefaultWorkingDirectory)'
 
+
+steps:
+
+- script:
+    tflint --chdir=${{ parameters.workingDirectory}}
+  displayName: 'Run Linux TFLint to Lint terraform code'
+  name: 'RunTFLintonLinux'
+  condition: eq(variables['Agent.OS'], 'Linux') 
+  
+- powershell: 
+   ${{ parameters.workingDirectory }}/tflint.exe -v   
+  displayName: 'Run Windows TFLint to Lint terraform code'
+  name: 'RunTFLintonWindows'
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
